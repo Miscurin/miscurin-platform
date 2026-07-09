@@ -1,25 +1,18 @@
 'use client'
 
-import { useState, FormEvent } from 'react'
+import { useState, type FormEvent } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
-import { isSupabaseConfigured, SUPABASE_UNCONFIGURED_MESSAGE } from '@/lib/supabase/config'
+import {
+  isSupabaseConfigured,
+  SUPABASE_UNCONFIGURED_MESSAGE,
+} from '@/lib/supabase/config'
+import { isSafeRedirect } from '@/utils/url'
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 import Label from '@/components/ui/Label'
 import Alert from '@/components/ui/Alert'
-
-const ALLOWED_REDIRECT_PREFIXES = ['/dashboard', '/admin', '/account']
-
-function isSafeRedirect(path: string): boolean {
-  return (
-    path.startsWith('/') &&
-    !path.startsWith('//') &&
-    !path.includes(':') &&
-    ALLOWED_REDIRECT_PREFIXES.some((prefix) => path.startsWith(prefix))
-  )
-}
 
 export default function LoginForm() {
   const router = useRouter()
@@ -57,6 +50,7 @@ export default function LoginForm() {
     }
 
     setLoading(true)
+    // Non-null assertion is safe: isSupabaseConfigured() returned true above
     const supabase = createClient()!
 
     const { error: authError } = await supabase.auth.signInWithPassword({
