@@ -1,24 +1,50 @@
 ---
-name: Miscurin Sprint 1 Foundation
-description: Durable decisions and constraints from Sprint 1 — roles, security, and Supabase integration patterns.
+name: Miscurin Sprint 1 & 2 setup
+description: Key architectural decisions from Sprint 1 (auth foundation) and Sprint 2 (design system) of the Miscurin platform.
 ---
 
-# Miscurin Sprint 1 Foundation
+## Sprint 1 — Auth Foundation
 
-## Role model authority
-Public registration is locked to 'customer'. Staff/Founder roles are assigned by a Founder via the `profiles` table. Never trust `user_metadata.role` for authorization — always read role from a server-side `profiles` query under RLS.
+### Supabase env guard
+`isSupabaseConfigured()` in `src/lib/supabase/config.ts` returns null-safe clients.
+All callers check for null. App shows "Not connected" warning rather than crashing.
+**Why:** Replit env vars may be absent during cold starts; crashing the app is worse than degraded mode.
 
-**Why:** Supabase user_metadata is client-readable and self-writable at registration. Trusting it for role gates is a privilege escalation risk.
+### Role authority model
+Roles (`customer`, `staff`, `founder`) stored in `public.profiles.role` with a CHECK constraint + DB trigger.
+No client-side role self-assignment. Default role is `customer`, auto-assigned on registration.
+**Why:** Client-side role claims are a security anti-pattern; enforce at DB layer.
 
-## Supabase env guard pattern
-Both server-side code and middleware must guard against placeholder/missing Supabase credentials. The safe pattern: check `NEXT_PUBLIC_SUPABASE_URL` before constructing any Supabase client; gracefully fall through (e.g. redirect to /login, or pass the request) rather than crashing with an invalid URL error.
+### Open-redirect allowlist
+`isSafeRedirect()` in `src/utils/url.ts` validates `?redirectTo` against `SAFE_REDIRECT_PREFIXES` in `src/constants/routes.ts`.
+Imported by both `src/middleware.ts` and `LoginForm.tsx`.
+**Why:** Open-redirect vulnerabilities are trivial to exploit; allowlist is the only safe pattern.
 
-**Why:** Middleware and server components run before the user can set up Supabase. A crash at the root breaks all routes, including /login.
+---
 
-## Open redirect guard
-The `redirectTo` query param on /login must be validated against an allowlist of known-safe path prefixes before use. Anything else falls back to `/dashboard`.
+## Sprint 2 — Design System
 
-**Why:** Unvalidated redirectTo enables open-redirect attacks via crafted URLs.
+### Component prop conventions (learned from tsc errors)
+- `Alert` uses `variant` + `message` props, NOT `type` + children.
+- `Badge` variant union is `default | brand | success | warning | error | info | outline` (no `primary`).
+- `Chip` uses `variant` prop, NOT `color`.
+- `Checkbox` extends `InputHTMLAttributes` — use `onChange` (not `onCheckedChange`); static checkboxes need `readOnly`.
+- `RadioGroup` has NO built-in `value`/`onChange` — control via native `checked`/`onChange` on each `Radio`.
+- `EmptyState` uses `action` (not `primaryAction`) for the primary CTA.
+- `Icon` `IconName` union does NOT include: `home`, `bag`, `warning`, `unlock`, `logout`, `phone`, `share`.
+  Correct equivalents: `shopping-bag`, `alert-triangle`, `alert-circle`, `lock`.
+**Why:** Durable reminder — showcase page hit all these mismatches; check component files before using in new pages.
 
-## Cookie typing in Supabase SSR
-The `setAll` callback must be explicitly typed to satisfy TypeScript strict mode. Import `CookieOptions` from `@supabase/ssr` and annotate the parameter as `{ name: string; value: string; options: CookieOptions }[]`.
+### Toast system
+`ToastProvider` wraps the root layout. `useToast()` is the hook for client components.
+`Toaster` renders via React portal at `z-[500]`. Duration 0 = persistent.
+**Why:** Portal ensures toasts overlay modals/drawers correctly.
+
+### next/image remote patterns
+Any external image hostname used with `<Image>` must be added to `next.config.ts` under `images.remotePatterns`.
+Unsplash (`images.unsplash.com`) is already added.
+**Why:** Next.js throws at runtime (not build time) if the hostname is missing.
+
+### Design system route
+`/design-system` is a public route (no auth group). Layout adds the internal-reference banner.
+All 19 sections are interactive (toasts, modal, drawer fire live).

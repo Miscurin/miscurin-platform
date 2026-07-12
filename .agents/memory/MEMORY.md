@@ -1,1 +1,1 @@
-- [Miscurin Sprint 1 setup](miscurin-sprint1.md) — Next.js 15 + Supabase auth foundation; key decisions on roles, middleware, and Supabase env guard.
+- [Miscurin Sprint 1 & 2 setup](miscurin-sprint1.md) — Auth foundation + design system; component prop conventions, toast system, next/image remote patterns.
