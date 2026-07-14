@@ -1,0 +1,178 @@
+Sprint 3 — Build the Premium Homepage
+
+Objective:
+Build the complete homepage for Miscurin using the Design System created in Sprint 2.
+
+Do NOT create placeholder-looking UI.
+
+The homepage should feel like a premium global fashion brand that could compete with Zara, COS, ARKET, H&M, and Nike while maintaining Miscurin's own identity.
+
+Use only reusable components from Sprint 2.
+
+Technology:
+- Next.js
+- TypeScript
+- TailwindCSS
+- App Router
+- Responsive
+- Accessible
+- Performance optimized
+
+Homepage Layout
+
+1. Premium Announcement Bar
+- Free Shipping
+- Easy Returns
+- Secure Payments
+- Smooth auto sliding announcements
+
+2. Sticky Navigation
+Left:
+Miscurin logo
+
+Center:
+Men
+Women
+New
+Collections
+Sale
+
+Right:
+Search
+Wishlist
+Cart
+Account
+
+Transparent over hero.
+Turns white on scroll.
+
+3. Hero Section
+
+Large full-screen fashion image.
+
+Left side:
+Small label
+
+NEW COLLECTION 2026
+
+Large premium heading
+
+Discover Your Style
+
+Short description.
+
+Primary button
+Shop Now
+
+Secondary button
+Explore Collection
+
+Right side:
+Large editorial fashion image.
+
+Smooth fade and parallax animations.
+
+4. Featured Categories
+
+Large image cards.
+
+Men
+
+Women
+
+Accessories
+
+Footwear
+
+Hover animations.
+
+5. New Arrivals
+
+Product grid.
+
+Show:
+Image
+Name
+Price
+Quick Add
+Wishlist
+
+6. Trending Collection Banner
+
+Large editorial section.
+
+Luxury photography.
+
+Strong typography.
+
+Shop Collection button.
+
+7. Best Sellers
+
+Responsive product carousel.
+
+8. Why Miscurin
+
+Four premium feature cards.
+
+Premium Quality
+
+Worldwide Shipping
+
+Secure Checkout
+
+Easy Returns
+
+9. Customer Reviews
+
+Modern testimonial cards.
+
+10. Instagram Gallery
+
+Fashion lifestyle grid.
+
+11. Newsletter
+
+Minimal premium newsletter section.
+
+12. Premium Footer
+
+Company
+
+Shop
+
+Support
+
+Legal
+
+Social Media
+
+Copyright
+
+Design Rules
+
+Lots of white space.
+
+Large typography.
+
+Editorial layouts.
+
+Smooth animations.
+
+Rounded corners.
+
+Premium shadows.
+
+Never look generic.
+
+Everything responsive.
+
+No lorem ipsum.
+
+No placeholder boxes.
+
+Use realistic fashion content.
+
+Optimize for performance.
+
+Commit everything to GitHub after completion.
